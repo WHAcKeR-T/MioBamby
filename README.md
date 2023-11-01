@@ -1,3 +1,4 @@
+MioBamby is and admin dashboard website for e-commerce including MLM Affiliating features.
 ## Installation:
 install python 3.11.5
 install dependencies
