@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MioBamby</title>
+	<meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+	<link rel="stylesheet" href="{% static 'css/styles.min.css' %}" />
+	<link rel="icon" type="image/x-icon" href="{% static 'images/logo.png' %}">
+	<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.35.0/dist/apexcharts.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<style>.sidebar-nav ul .sidebar-item.selected>.sidebar-link, .sidebar-nav ul .sidebar-item.selected>.sidebar-link.active, .sidebar-nav ul .sidebar-item>.sidebar-link.active {
+		background-color: #0c559d;
+		color: #fff;
+	}
+	.sidebar-nav ul .sidebar-item .sidebar-link:hover {
+    background-color: rgba(93,135,255,0.1);
+    color: #2f6dab;
+	}
+	.btn-primary {
+    --bs-btn-color: #fff;
+    --bs-btn-bg: #0c559d;
+    --bs-btn-border-color: #0c559d;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #4f73d9;
+    --bs-btn-hover-border-color: #4a6ccc;
+    --bs-btn-focus-shadow-rgb: 117,153,255;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #4a6ccc;
+    --bs-btn-active-border-color: #4665bf;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0,0,0,0.125);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: #0c559d;
+    --bs-btn-disabled-border-color: #0c559d;
+}
+
+	
+	</style>
+</head>
+<body style="background-color: rgb(206, 229, 255);">
+	  <!--  Body Wrapper -->
+	  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+	  data-sidebar-position="fixed" data-header-position="fixed" >
+	  {%  include 'accounts/navbar.html' %}
+	  <!--  Main wrapper -->
+	  <div class="body-wrapper">
+		<!--  Header Start -->
+		<header class="app-header">
+		  <nav class="navbar navbar-expand-lg navbar-light">
+			<ul class="navbar-nav">
+			  <li class="nav-item d-block d-xl-none">
+				<a class="nav-link sidebartoggler nav-icon-hover" id="headerCollapse" href="javascript:void(0)">
+				  <i class="ti ti-menu-2"></i>
+				</a>
+			  </li>
+			</ul>
+			<center><h1 class="fw-semibold" style="color: #e43435; float:left; display:inline;">Mio</h1><h1 class="fw-semibold" style="color: #0c559d; float:left; display:inline;">Bamby</h1><h6>Panneau d’administration</h6></center>
+			<div class="navbar-collapse justify-content-end px-0" id="navbarNav">
+			  <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-end">
+				<li class="nav-item dropdown">
+				  <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2" data-bs-toggle="dropdown"
+					aria-expanded="false">
+					<img src="{% static 'images/admin-pfp.png' %}" alt="" width="50" height="50" class="rounded-circle">
+				  </a>
+				</li>
+			  </ul>
+			</div>
+		  </nav>
+		</header>
+		<!--  Header End -->
+		<div class="container-fluid">
+			{% block content %}
+
+
+
+			{% endblock %}
+		</div>
+	  </div>
+	</div>
+
+	<script src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+	<script src="{% static 'libs/bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
+	<script src="{% static 'js/sidebarmenu.js' %}"></script>
+	<script src="{% static 'js/app.min.js' %}"></script>
+	<script src="{% static 'libs/apexcharts/dist/apexcharts.min.js' %}"></script>
+	<script src="{% static 'libs/simplebar/dist/simplebar.js' %}"></script>
+	<script src="{% static 'js/chart.js' %}"></script>
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>	

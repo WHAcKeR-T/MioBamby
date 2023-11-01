@@ -1,0 +1,177 @@
+{%  extends 'accounts/main.html' %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="card card-header" style="background-color: white;">
+    <div id="myModal" class="modal" style="{% if search_results %}display: block;{% else %}display: none;{% endif %}">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <!-- Table header remains the same -->
+                </thead>
+                <tbody>
+                    {% for data in search_results %}
+                        <tr>
+                            <!-- Table body remains the same -->
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+    <center><div  class="col-md-7">
+    <form method="GET" action="{% url 'network' %}">
+        <center>
+            <input type="text" name="search" placeholder="Chercher avec Nom ou CIN ou ID">
+            <button type="submit">Chercher</button>
+        </center>
+    </form>
+    </div></center>
+
+    <script>
+        // Add this script to handle modal behavior
+        var modal = document.getElementById('myModal');
+        var span = document.getElementsByClassName('close')[0];
+
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+    </div>
+    <div class="card card-body">
+    <h3>Membres</h3>
+    <hr>
+    <div class="card card-body">
+        <div class="table-responsive">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>CIN</th>
+                    <th>Mail</th>
+                    <th>Tel</th>
+                    <th>Adresse</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in data_list %}
+                    <tr>
+                        <td>{{ data.Nom }}</td>
+                        <td>{{ data.CIN }}</td>
+                        <td>{{ data.Mail }}</td>
+                        <td>{{ data.Tel }}</td>
+                        <td>{{ data.Adresse }}</td>
+                        <td><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#id_{{ data.UID }}">Détail</button>
+                        <div class="modal fade" id="id_{{ data.UID }}" tabindex="-1" role="dialog" aria-labelledby="{{ data.UID }}" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 1200px !important;">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">{{ data.Nom }}: {{ data.UID }}</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>									
+                                        <tr>
+                                            <th style="max-width: 100px;">ID</th>
+                                            <th style="max-width: 100px;">ID Superieur</th>
+                                            <th>Chiffre d'affaire</th>
+                                            <th>Premier achat?</th>
+                                            <th>Grade</th>
+                                            <th>Prime de parainage</th>
+                                            <th>Prime d'animation</th>
+                                            <th>Autorisé?</th>
+                                            <th>Solde</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td style="max-width: 100px;">{{ data.UID }}</td>
+                                            <td style="max-width: 100px;">{{ data.Superior }}</td>
+                                            <td>{{ data.CA|floatformat:3  }} d.t</td>
+                                            <td>{% if data.firstOrder == "true" %}
+                                                Vrai
+                                            {% else %}
+                                                Faux
+                                            {% endif %}
+                                            </td>
+                                            <td>{{ data.Grade }}</td>     
+                                            <td>{{ data.primeAff|floatformat:3  }}</td>  
+                                            <td>{{ data.primeAnim|floatformat:3  }}</td>  
+                                            <td></td>  
+                                            <td>{{ data.Solde|floatformat:3  }}</td>                 
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="btn btn-danger" href="{% url 'delete_Aff' data.UID %}">Supprimer</a>
+                                    <a class="btn btn-danger" href="">Bloquer</a>
+                                </div>
+                              </div>
+                            </div>
+                        </div></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        <div class="card card-footer">
+			<div class="pagination" style="width: 100%;   display: flex; justify-content: center; align-items: center;">
+				<nav aria-label="Page navigation">
+					<ul class="pagination">
+						{% if data_list.has_previous %}
+							<li class="page-item">
+								<a class="page-link" href="?page=1" aria-label="First">
+									<span aria-hidden="true">&laquo;&laquo;</span>
+								</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="?page={{ data_list.previous_page_number }}" aria-label="Previous">
+									<span aria-hidden="true">&laquo;</span>
+									<span class="sr-only">Précédent</span>
+								</a>
+							</li>
+						{% endif %}
+				
+						<li class="page-item disabled">
+							<span class="page-link">Page {{ data_list.number }} sur {{ data_list.paginator.num_pages }}</span>
+						</li>
+				
+						{% if data_list.has_next %}
+							<li class="page-item">
+								<a class="page-link" href="?page={{ data_list.next_page_number }}" aria-label="Next">
+									<span aria-hidden="true">&raquo;</span>
+									<span class="sr-only">Suivant</span>
+								</a>
+							</li>
+							<li class="page-item">
+								<a class="page-link" href="?page={{ data_list.paginator.num_pages }}" aria-label="Last">
+									<span aria-hidden="true">&raquo;&raquo;</span>
+								</a>
+							</li>
+						{% endif %}
+					</ul>
+				</nav>
+				
+			</div>	
+		</div>
+    </div>
+</div>
+</div>
+{% endblock %}

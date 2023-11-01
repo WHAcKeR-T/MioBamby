@@ -1,0 +1,219 @@
+{%  extends 'accounts/main.html' %}
+{% load i18n %}
+{% block content %}
+<div class="col-lg-12 align-items-stretch">
+    <div class="row">
+      <div class="col-lg-8 align-items-stretch">    
+        <div class="card w-100">  
+          <div class="card-body">
+            <div class="d-sm-flex d-block align-items-center justify-content-between mb-9">
+              <div class="mb-3 mb-sm-0">
+                <h3>{{ formatted_date.day_of_week }}, {{ formatted_date.day }} {{ formatted_date.month }}</h3>
+                <hr>
+                <div id="bars"></div>
+                <script>
+                    var chartData = {{ chart_data_json | safe }};
+                    var chartLabels = {{ chart_labels_json | safe }};
+                    var bars = {
+                        series: [
+                            { name: "Commandes ce mois", data: chartData },
+                        ],
+                        chart: {
+                            type: "bar",
+                            height: 345,
+                            width: 700,
+                            offsetX: -15,
+                            toolbar: { show: true },
+                            foreColor: "#adb0bb",
+                            fontFamily: 'inherit',
+                            sparkline: { enabled: false },
+                        },
+                        colors: ["#0c559d", "#49BEFF"],
+                        plotOptions: {
+                            bar: {
+                                horizontal: false,
+                                columnWidth: "35%",
+                                borderRadius: [6],
+                                borderRadiusApplication: 'end',
+                                borderRadiusWhenStacked: 'all'
+                            },
+                        },
+                        markers: { size: 0 },
+                        dataLabels: {
+                            enabled: false,
+                        },
+                        legend: {
+                            show: false,
+                        },
+                        grid: {
+                            borderColor: "rgba(0,0,0,0.1)",
+                            strokeDashArray: 3,
+                            xaxis: {
+                                lines: {
+                                    show: false,
+                                },
+                            },
+                        },
+                        xaxis: {
+                            type: "category",
+                            categories: chartLabels,
+                            title: {
+                              text: "Mois",
+                              style: {
+                                fontSize: '12px',
+                                color: '#999999'
+                              }
+                            },
+                            labels: {
+                                style: { cssClass: "grey--text lighten-2--text fill-color" },
+                            },
+                        },
+                        yaxis: {
+                            show: true,
+                            min: 0,
+                            max: 100,
+                            tickAmount: 5,
+                            labels: {
+                                style: {
+                                    cssClass: "grey--text lighten-2--text fill-color",
+                                },
+                            },
+                        },
+                        stroke: {
+                            show: true,
+                            width: 3,
+                            lineCap: "butt",
+                            colors: ["transparent"],
+                        },
+                        tooltip: { theme: "light" },
+                        responsive: [
+                            {
+                                breakpoint: 600,
+                                options: {
+                                    plotOptions: {
+                                        bar: {
+                                            borderRadius: 3,
+                                        }
+                                    },
+                                }
+                            }
+                        ]
+                    };
+                
+                    var chart = new ApexCharts(document.querySelector("#bars"), bars);
+                    chart.render();
+                </script>
+                
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div class="col-lg-4 align-items-stretch">    
+        <div class="card w-100 h-40">
+          <div class="card-body">
+            <div class="row alig n-items-start">
+              <div class="col-8">
+                <h5 class="card-title mb-9 fw-semibold"> Gains mensuels </h5>
+                <h4 class="fw-semibold mb-3" style="color: green;">{{ monthly_earnings|floatformat:3 }} DT</h4>
+              </div>
+              <div class="col-4">
+                  <div class="d-flex justify-content-end">
+                    <div
+                      class="text-white bg-secondary rounded-circle p-6 d-flex align-items-center justify-content-center">
+                      <i class="ti ti-currency-dollar fs-6"></i>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 d-flex align-items-stretch">
+            <div class="card w-100">
+              <div class="card-body p-4">
+                <h5 class="card-title fw-semibold mb-4" style="color: #0c559d;">Meilleurs affiliés selon chiffre d'affaire</h5>
+                <div class="table-responsive">
+                  <table class="table text-nowrap mb-0 align-middle">
+                    <thead class="text-dark fs-4">
+                      <tr>
+                        <th class="border-bottom-0">
+                          <h6 class="fw-semibold mb-0" style="color: #e43435;">Rang</h6>
+                        </th>
+                        <th class="border-bottom-0">
+                          <h6 class="fw-semibold mb-0">Nom</h6>
+                        </th>
+                        <th class="border-bottom-0">
+                          <h6 class="fw-semibold mb-0">Grade</h6>
+                        </th>
+                        <th class="border-bottom-0">
+                          <h6 class="fw-semibold mb-0">Chiffre d'affaire</h6>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for affiliate in top_ca_affiliates %}
+                      <tr>
+                        <td class="border-bottom-0"><h6 class="fw-semibold mb-0" style="color: #e43435;">{{ forloop.counter }}</h6></td>
+                        <td class="border-bottom-0">
+                            <h6 class="fw-semibold mb-1">{{ affiliate.Nom }}</h6>
+                        </td>
+                        <td class="border-bottom-0">
+                          <p class="mb-0 fw-normal">{{ affiliate.Grade }}</p>
+                        </td>
+                        <td class="border-bottom-0">
+                          <h6 class="fw-semibold mb-0 fs-4">{{ affiliate.CA|floatformat:3 }} DT</h6>
+                        </td>
+                      </tr>     
+                    {% endfor %}                
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 d-flex align-items-stretch">
+            <div class="card w-100">
+              <div class="card-body p-4">
+                <h5 class="card-title fw-semibold mb-4" style="color: #0c559d;">Meilleurs affiliés selon le nombre des commandes ce mois</h5>
+                <div class="table-responsive">
+                  <table class="table text-nowrap mb-0 align-middle">
+                    <thead class="text-dark fs-4">
+                      <tr>
+                        <th class="border-bottom-0">
+                          <h6 class="fw-semibold mb-0" style="color: #e43435;">Rang</h6>
+                        </th>
+                        <th class="border-bottom-0">
+                          <h6 class="fw-semibold mb-0">Nom</h6>
+                        </th>
+                        <th class="border-bottom-0">
+                          <h6 class="fw-semibold mb-0">Nombre de commandes ce mois</h6>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for order_by, order_count in top_orders_affiliates %}
+                      <tr>
+                        <td class="border-bottom-0"><h6 class="fw-semibold mb-0" style="color: #e43435;">{{ forloop.counter }}</h6></td>
+                        <td class="border-bottom-0">
+                            <h6 class="fw-semibold mb-1">{{ order_by }}</h6>
+                        </td>
+                        <td class="border-bottom-0">
+                          <p class="mb-0 fw-normal">{{ order_count }}</p>
+                        </td>
+                      </tr>     
+                    {% endfor %}                
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+    </div>
+</div>
+
+{% endblock %}

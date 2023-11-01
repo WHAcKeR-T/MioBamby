@@ -1,0 +1,17 @@
+/env
+/secrets
+.env
+/Dependencies
+db.sqlite3
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+
+
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]

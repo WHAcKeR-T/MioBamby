@@ -1,0 +1,218 @@
+{%  extends 'accounts/main.html' %}
+
+{% block content %}
+<br>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="card card-header" style="background-color: white;">
+			<h5 class="card-title fw-semibold mb-4">Articles</h5>
+			<hr>
+			
+			<center><h6 class="fw-semibold mb-4">Ajouter un article</h6><a href="/create_article"><button type="button" class="btn btn-primary">Ajouter</button></a></center>
+		</div>
+		<div class="card card-body">
+			
+			<form method="get" action="{% url 'search_article' %}">
+				<div class="form-row align-items-center">
+					<div class="col-auto">
+						<label class="sr-only" for="search">Rechercher un article</label>
+						<input type="text" class="form-control mb-2" id="search" name="search" placeholder="Réference">
+					</div>
+					<div class="col-auto">
+						<center><button type="submit" class="btn btn-primary mb-2">Rechercher</button></center>
+					</div>
+				</div>
+			</form>
+			<hr>
+			<div class="row">
+				{% for article in articles %}
+				<div class="col-md-3 mb-4">
+					<div class="card">
+						<div class="card-img-container">
+						<img src="{{ article.ImageUrls.0 }}" class="card-img-top" alt="Product Image">
+						<style>
+						.card-img-container {
+							height: 350px; /* Adjust the maximum height as needed */
+							overflow: hidden; /* Hide any excess image content */
+						}
+						.card-img-container img {
+							width: 100%;
+							height: 100%;
+							object-fit: contain; /* Scale image proportionally to fit within the container */
+						}
+						</style>
+						</div>
+						<div class="card-body">
+							<h5 class="card-title">{{ article.Ref }}</h5>
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ref_{{ article.Ref }}">
+								Détails
+							</button>
+							<!-- Modal -->
+							<div class="modal fade" id="ref_{{ article.Ref }}" tabindex="-1" role="dialog" aria-labelledby="ref_{{ article.Ref }}" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLongTitle">Article: {{ article.Ref }}</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									</div>
+									<div class="modal-body">
+										<div id="carousel_{{ article.Ref }}" class="carousel slide" data-ride="carousel">
+											<ol class="carousel-indicators">
+												{% for image_url in article.ImageUrls %}
+												<li data-target="#carousel_{{ article.Ref }}" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+												{% endfor %}
+											</ol>
+											<div class="carousel-inner">
+												{% for image_url in article.ImageUrls %}
+												<div class="carousel-item {% if forloop.first %}active{% endif %}">
+													<img src="{{ image_url }}" class="d-block w-100" alt="Image" style="max-height: 300px; max-width: 100%; object-fit: contain;">
+												</div>
+												{% endfor %}
+											</div>
+											<a class="carousel-control-prev" href="#carousel_{{ article.Ref }}" role="button" data-slide="prev">
+												<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+												<span class="sr-only"></span>
+											</a>
+											<a class="carousel-control-next" href="#carousel_{{ article.Ref }}" role="button" data-slide="next">
+												<span class="carousel-control-next-icon" aria-hidden="true"></span>
+												<span class="sr-only"></span>
+											</a>
+										</div>
+										<style>
+											/* CSS to change Carousel next and previous button color to black */
+											.carousel-control-prev-icon,
+											.carousel-control-next-icon {
+												background-color: black; /* Change the button background color */
+												color: white; /* Change the button icon color */
+											}
+										</style>
+										<hr>
+										<h6>Couleurs:</h6>
+										<!-- Display colors as circles -->
+										<div class="colors-container mt-4">
+											{% for color in article.Couleurs %}
+											<span class="color-indicator" style="background-color: {{ color }};"></span>
+											{% endfor %}
+										</div>
+										<style>
+											/* CSS for the circular color indicators */
+											.color-indicator {
+												display: inline-block;
+												width: 30px; /* Adjust the size as needed */
+												height: 30px; /* Adjust the size as needed */
+												border-radius: 50%;
+												margin-right: 5px; /* Adjust the spacing between indicators */
+												border: solid black;
+											}
+										</style>
+										<hr>
+										<h6>Tailles:</h6>
+										<!-- Display sizes in boxes -->
+										<div class="sizes-container mt-4">
+											{% for taille in article.Tailles %}
+											<div class="size-box">{{ taille }}</div>
+											{% endfor %}
+										</div>
+										<style>
+											/* CSS for the size boxes */
+											.size-box {
+												display: inline-block;
+												padding: 5px 10px;
+												border: 1px solid #000000;
+												margin-right: 5px;
+												background-color: #f0f0f0;
+											}
+										</style>
+										<hr>
+										<h6>Prix: </h6>{{ article.PrixU}} d.t
+									</div>
+									<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+									<a class="btn btn-danger" href="{% url 'delete_document' article.Ref %}">Supprimer</a>
+									<a class="btn btn-primary" href="{% url 'edit_article' article.Ref %}">Modifier</a>
+									</div>
+								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% if forloop.counter|divisibleby:4 %}
+				</div><div class="row">{% endif %}
+				{% endfor %}
+			</div>
+		</div>
+		
+		
+	</div>
+	<div class="card card-footer" style="background-color: white;">
+		<div class="pagination" style="width: 100%;   display: flex; justify-content: center; align-items: center;">
+			<nav aria-label="Page navigation">
+				<ul class="pagination">
+					{% if articles.has_previous %}
+						<li class="page-item">
+							<a class="page-link" href="?page=1" aria-label="First">
+								<span aria-hidden="true">&laquo;&laquo;</span>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="?page={{ articles.previous_page_number }}" aria-label="Previous">
+								<span aria-hidden="true">&laquo;</span>
+								<span class="sr-only">Précédent</span>
+							</a>
+						</li>
+					{% endif %}
+			
+					<li class="page-item disabled">
+						<span class="page-link">Page {{ articles.number }} sur {{ articles.paginator.num_pages }}</span>
+					</li>
+			
+					{% if articles.has_next %}
+						<li class="page-item">
+							<a class="page-link" href="?page={{ articles.next_page_number }}" aria-label="Next">
+								<span aria-hidden="true">&raquo;</span>
+								<span class="sr-only">Suivant</span>
+							</a>
+						</li>
+						<li class="page-item">
+							<a class="page-link" href="?page={{ articles.paginator.num_pages }}" aria-label="Last">
+								<span aria-hidden="true">&raquo;&raquo;</span>
+							</a>
+						</li>
+					{% endif %}
+				</ul>
+			</nav>
+			
+		</div>	
+	</div>
+	<script>
+		// Get all the carousels on the page
+		var carousels = document.querySelectorAll('.carousel');
+
+		// Loop through each carousel
+		carousels.forEach(function(carousel) {
+			// Get the number of slides in each carousel
+			var slides = carousel.querySelectorAll('.carousel-item').length;
+
+			// Check if there's only one slide
+			if (slides === 1) {
+				// Hide the next and previous buttons for this carousel
+				var prevButton = carousel.querySelector('.carousel-control-prev');
+				var nextButton = carousel.querySelector('.carousel-control-next');
+
+				if (prevButton) {
+					prevButton.style.display = 'none';
+				}
+
+				if (nextButton) {
+					nextButton.style.display = 'none';
+				}
+			}
+		});
+	</script>
+
+</div>
+{% endblock content %}
